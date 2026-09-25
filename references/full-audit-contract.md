@@ -75,3 +75,18 @@ Explicit narrow prompts may route only to the relevant module(s).
 - Every material calculation must be reproducible or explicitly marked `UNREPRODUCIBLE`.
 - Material evidence must be distinguishable as user input/unverified, verified source/date, derived calculation, assumption, or missing.
 - Final `Audit Integrity Check` must include module counts, unique findings, severity/materiality reconciliation, primary-module reconciliation, evidence-provenance check, and decision-changing-link check.
+
+
+## Final-hardening additions (v1.9.2)
+
+### Source verification record
+For every material externally verified claim, retain: publisher/institution, source title or stable identifier, publication date, retrieval date when freshness matters, exact claim supported, relevant period, source quality/type, and known source lineage. If any of these are materially missing, do not label the claim fully VERIFIED.
+
+### Synthesis/action status semantics
+M16 Thesis State, M17 Decision State, M19 Kill Switches, and M20 Next Best Action are synthesis/action modules. Their successful completion is `COMPLETED`, not `FOUND`, unless the implementation explicitly identifies a separate diagnostic defect. M18 is `NOT APPLICABLE` for clearly forward-looking pre-decision audits.
+
+### Arithmetic vs forecast validity
+A correct compounding calculation does not validate the assumed return path. Report arithmetic correctness separately from forecast/assumption support.
+
+### Recovery-duration traceability
+Claims about historical recovery time, drawdown duration, or repeated recovery require explicit date/definition/source traceability. Otherwise mark them UNVERIFIED and do not use them as established historical evidence.

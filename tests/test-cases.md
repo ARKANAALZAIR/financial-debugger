@@ -354,3 +354,32 @@ Expected: Audit Integrity Check fails and the report must be repaired before ret
 ## 70 Full-audit state accounting
 Input: Full audit where 14 modules have findings, 4 have no findings, and 2 lack core inputs.
 Expected: Final integrity block reports 20/20 executed, 14 FOUND, 4 ERROR NOT FOUND, 2 NOT ASSESSABLE, with reconciled unique findings.
+
+
+## 71 M02 material input gap
+Input: portfolio strategy has no stated liquidity need, risk tolerance, or mechanism for its return target.
+Expected: M02 is `FOUND` with a sufficiency-gap finding; do not report `ERROR NOT FOUND`.
+
+## 72 Synthesis status
+Input: complete audit with a fragile thesis and fragile decision but no separate diagnostic defect in state synthesis.
+Expected: M16/M17 are `COMPLETED` and do not invent Finding IDs merely because the state is FRAGILE.
+
+## 73 Post-mortem applicability
+Input: clearly forward-looking investment thesis with no prior decision outcome.
+Expected: M18 is `NOT APPLICABLE`, not `ERROR NOT FOUND`.
+
+## 74 Source provenance
+Input: a material current-price claim supported only by an undated tag page.
+Expected: source is not labeled fully verified; require publisher/title/date/retrieval/claim support or label `REQUIRES SOURCE VERIFICATION`.
+
+## 75 Recovery-duration traceability
+Input: “BTC historically recovered in 13 months to 2+ years” with no dated source or definition.
+Expected: duration claim is `UNVERIFIED` and cannot be used as established historical evidence.
+
+## 76 Arithmetic versus forecast
+Input: “Rp10m becomes Rp18m in 12 months at 5% monthly.”
+Expected: compounding arithmetic is checked separately from whether a 5% monthly path is supported. Do not call the arithmetic itself erroneous if it is mathematically correct.
+
+## 77 Assessment confidence
+Input: strong calculations but several material market claims remain unverified.
+Expected: qualitative confidence can be `MODERATE` or `LOW` with explicit basis; never invent a numeric probability of correctness.

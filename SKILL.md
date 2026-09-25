@@ -1,7 +1,7 @@
 ---
 name: financial-debugger
 description: Debug financial reasoning before money pays for the mistake. Audit claims, evidence, assumptions, methods, calculations, valuation, forecasts, scenarios, portfolio exposure, risk, uncertainty, and post-mortems. Use for equities, crypto, macro, financial news, valuation, portfolios, and personal-finance decisions. Prefer conditional analysis over prediction; never fabricate current data, sources, calculations, or confidence.
-version: 1.9.1
+version: 1.9.2
 ---
 
 # Financial Debugger
@@ -55,15 +55,29 @@ The system may forecast conditional outcomes, but it must never present a foreca
 
 ### A. Exact module state decision
 
+Use status semantics based on the *role* of the module, not merely whether it ran.
+
+**Diagnostic modules** (M01–M15, M18):
 ```text
 Can the module materially answer its core diagnostic question?
-├─ NO → NOT ASSESSABLE + Coverage: LIMITED + missing core input
+├─ NO → NOT ASSESSABLE + Coverage: LIMITED + explicit missing core input
 └─ YES
-   ├─ Material defect/diagnostic issue found → FOUND
+   ├─ Material defect/gap/diagnostic issue found → FOUND
    └─ No material defect found → ERROR NOT FOUND
 ```
 
-`PARTIAL` coverage may coexist with `FOUND` or `ERROR NOT FOUND` when the core diagnostic runs but some sub-checks are blocked.
+**Synthesis / action modules** (M16, M17, M19, M20):
+```text
+Can the module complete its synthesis/action function from the audited state?
+├─ NO → NOT ASSESSABLE + Coverage: LIMITED
+└─ YES → COMPLETED
+```
+
+**Contextually irrelevant modules** use `NOT APPLICABLE` (for example M18 on a clearly forward-looking, pre-decision audit with no prior decision to reconstruct). Do not call `ERROR NOT FOUND` on a module that had nothing applicable to diagnose.
+
+`PARTIAL` coverage may coexist with `FOUND`, `ERROR NOT FOUND`, or `COMPLETED` when the core function runs but some sub-checks are blocked.
+
+**Important M02 rule:** missing risk tolerance, liquidity needs, return mechanism, horizon, or other material decision inputs are themselves an input-sufficiency finding when they materially constrain the audit. M02 should therefore be `FOUND` with a finding ID when the missing input is a material decision gap. Reserve `NOT ASSESSABLE` for cases where the sufficiency question itself cannot be meaningfully evaluated.
 
 ### B. Severity/materiality calibration
 
@@ -80,11 +94,37 @@ Use one `FD-NNN` per underlying material issue. Cross-module detections become `
 
 For material claims, tag evidence as `USER INPUT / UNVERIFIED`, `VERIFIED SOURCE / DATE`, `DERIVED CALCULATION`, `ASSUMPTION`, or `MISSING`. Never silently upgrade user-provided numbers to verified current data.
 
+For every `VERIFIED SOURCE / DATE` record used for a material finding, expose enough provenance to audit the verification:
+- publisher / institution
+- source title or identifier
+- publication date (or explicit “undated”)
+- retrieval date when currentness matters
+- exact claim supported
+- source type / quality tier
+- relevant time period
+- lineage / upstream-source relationship when known
+
+A search-result snippet, tag page, aggregator, or repeated secondary report is not sufficient by itself to upgrade a material claim when the underlying primary source is reasonably available. If verification is partial, label it `PARTIALLY VERIFIED` or `REQUIRES SOURCE VERIFICATION` rather than `VERIFIED`.
+
 ### E. Calculation trace
 
 Material numerical findings must preserve inputs, formula, units, period, result, and rounding. Missing essential inputs produce `UNREPRODUCIBLE`/`NOT ASSESSABLE`, not an invented result.
 
-### F. Final audit integrity gate
+For compounded-return or target-wealth claims, distinguish **arithmetic validity** from **forecast validity**. A mathematically correct result such as `(1+r)^n` is not evidence that the return path `r` will occur. Do not escalate the arithmetic itself when the real defect is an unsupported return assumption.
+
+For historical recovery-duration, drawdown-recovery, or “always recovers” claims, do not state a specific recovery range unless the report can trace it to explicit dates, definitions, and sources. Otherwise label the duration claim `UNVERIFIED` and treat it as an assumption/unknown rather than as established historical fact.
+
+### F. Assessment confidence
+
+`Confidence` is an assessment-quality label, not a probability of the financial outcome. Use only `HIGH`, `MODERATE`, or `LOW`, and state the basis.
+
+- `HIGH`: core inputs are present, material claims are well-provenanced, calculations are reproducible, and unresolved unknowns are unlikely to change the diagnosis.
+- `MODERATE`: the core diagnosis is usable, but some material evidence, inputs, or verification remain incomplete.
+- `LOW`: important conclusions depend on unverified inputs, missing core evidence, or substantial unresolved ambiguity.
+
+Never convert confidence into a numeric percentage.
+
+### G. Final audit integrity gate
 
 The last section of every full audit must reconcile all module blocks, unique finding IDs, primary-module ownership, severity/materiality counts, evidence provenance, and decision-changing links. Use `references/audit-integrity.md`.
 
@@ -516,7 +556,7 @@ Each module block must contain:
 MODULE ID: M01
 MODULE: <canonical name>
 Execution: COMPLETE
-Status: FOUND / ERROR NOT FOUND / NOT ASSESSABLE
+Status: FOUND / ERROR NOT FOUND / NOT ASSESSABLE / NOT APPLICABLE / COMPLETED
 Coverage: FULL / PARTIAL / LIMITED
 Finding IDs: [FD-...]
 Evidence: <what was examined>
@@ -531,13 +571,17 @@ The full-audit report must end with:
 
 ```text
 Modules Executed: 20/20
-Modules With Findings: N
-Modules Error Not Found: N
+Diagnostic Modules With Findings: N
+Diagnostic Modules Error Not Found: N
 Modules Not Assessable: N
+Modules Not Applicable: N
+Synthesis/Action Modules Completed: N
 Unique Material Findings: N
 Severity Count Reconciled: PASS
 Finding ID Reconciliation: PASS
 Primary-Module Reconciliation: PASS
+Evidence Provenance Reconciliation: PASS
+Decision-Link Reconciliation: PASS
 ```
 
 Never claim `20/20` unless every module block is actually present.

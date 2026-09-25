@@ -279,7 +279,9 @@ Financial Debugger is one component of a broader **Debugger Series**: tools buil
 
 ## Final hardening
 
-v1.9.1 hardens the full-audit contract in five areas: `NOT ASSESSABLE` vs `ERROR NOT FOUND`, primary-module deduplication, evidence provenance, materiality/severity calibration, and calculation reproducibility. Every full audit ends with an **Audit Integrity Check** that reconciles module execution, unique findings, ownership, and decision-changing links.
+v1.9.2 is the final contract-hardening release. It extends v1.9.1 with deterministic module-state semantics, source-verification provenance, recovery-history traceability, arithmetic-vs-forecast separation, and synthesis/action status handling.
+
+v1.9.1 hardened the full-audit contract in five areas: `NOT ASSESSABLE` vs `ERROR NOT FOUND`, primary-module deduplication, evidence provenance, materiality/severity calibration, and calculation reproducibility. Every full audit ends with an **Audit Integrity Check** that reconciles module execution, unique findings, ownership, and decision-changing links.
 
 ## Validation
 

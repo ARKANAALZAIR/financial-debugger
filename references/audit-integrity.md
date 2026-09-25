@@ -2,11 +2,13 @@
 
 ## 1. Module-state semantics
 
-Use exactly one module status:
+Use one of these module statuses, according to module role:
 
-- `FOUND` — the module materially evaluated its scope and found at least one supported defect, gap, or diagnostic issue.
-- `ERROR NOT FOUND` — the module materially evaluated its scope and found no material defect within the evidence available.
-- `NOT ASSESSABLE` — a required core input is absent, so the module cannot reliably determine the diagnostic state. Missing evidence is not a negative finding.
+- `FOUND` — a diagnostic module materially evaluated its scope and found at least one supported defect, gap, or diagnostic issue.
+- `ERROR NOT FOUND` — a diagnostic module materially evaluated its scope and found no material defect within the evidence available.
+- `NOT ASSESSABLE` — a required core input is absent, so the diagnostic state cannot be reliably determined. Missing evidence is not negative evidence.
+- `NOT APPLICABLE` — the module's subject does not apply to the decision state being audited. Example: a post-mortem module on a clearly forward-looking pre-decision audit.
+- `COMPLETED` — a synthesis/action module successfully produced its output from the audited state. Use for M16, M17, M19, and M20 when their function can be completed.
 
 Coverage is independent:
 
@@ -18,11 +20,15 @@ Typical mapping:
 
 | Evidence state | Status | Coverage |
 |---|---|---|
-| Core inputs present + material issue found | FOUND | FULL/PARTIAL |
-| Core inputs present + no material issue found | ERROR NOT FOUND | FULL/PARTIAL |
-| Core input absent | NOT ASSESSABLE | LIMITED |
+| Diagnostic core inputs present + material issue found | FOUND | FULL/PARTIAL |
+| Diagnostic core inputs present + no material issue found | ERROR NOT FOUND | FULL/PARTIAL |
+| Diagnostic core input absent | NOT ASSESSABLE | LIMITED |
+| Module does not apply | NOT APPLICABLE | LIMITED |
+| Synthesis/action function completed | COMPLETED | FULL/PARTIAL |
 
-Do not use `ERROR NOT FOUND` just because the module was called.
+Do not use `ERROR NOT FOUND` just because the module was called. Do not use `FOUND` for a synthesis state merely because the resulting state is FRAGILE/CONTESTED.
+
+**M02:** a material missing input is itself a sufficiency finding, so M02 should normally be `FOUND` when the gap materially limits the decision audit.
 
 ## 2. Finding ownership and deduplication
 
@@ -71,6 +77,7 @@ For each material claim, distinguish:
 
 - `USER INPUT / UNVERIFIED`
 - `VERIFIED SOURCE / DATE`
+- `PARTIALLY VERIFIED / REQUIRES SOURCE VERIFICATION` when provenance or exact-claim support is incomplete
 - `DERIVED CALCULATION`
 - `ASSUMPTION`
 - `MISSING`
@@ -96,7 +103,9 @@ Before returning the report:
 ```text
 [ ] M01–M20 appear exactly once
 [ ] Every module has Execution, Status, Coverage, Finding IDs, Evidence/Notes
-[ ] Missing core inputs produce NOT ASSESSABLE, not ERROR NOT FOUND
+[ ] Diagnostic missing core inputs produce NOT ASSESSABLE; material input gaps in M02 are recorded as findings
+[ ] Synthesis/action modules use COMPLETED when their function is successfully produced
+[ ] Contextually irrelevant modules use NOT APPLICABLE
 [ ] Every finding ID is unique and has exactly one Primary Module
 [ ] Related-module references point to existing finding IDs
 [ ] Global finding totals equal the unique finding list
@@ -104,6 +113,8 @@ Before returning the report:
 [ ] No blocker suppresses remaining modules
 [ ] Material calculations are reproducible or explicitly UNREPRODUCIBLE
 [ ] Evidence provenance is explicit for material claims
+[ ] Verified sources expose publisher/title/date/retrieval/claim-supported when applicable
+[ ] Recovery-duration or historical-range claims have explicit traceability or are labeled unverified
 [ ] Decision-changing findings show an explicit decision linkage
 [ ] No unsupported probability/base-case/ranking is introduced
 [ ] Final Audit Integrity Check matches the displayed module matrix

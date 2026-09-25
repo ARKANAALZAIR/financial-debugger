@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Static repository validator for Financial Debugger v1.9.1."""
+"""Static repository validator for Financial Debugger v1.9.2."""
 from pathlib import Path
 import re
 import sys
@@ -22,8 +22,8 @@ if skill.is_file():
     text = skill.read_text(encoding="utf-8")
     if not re.search(r"^name:\s*financial-debugger\s*$", text, re.M): errors.append("SKILL.md: invalid name")
     m = re.search(r"^version:\s*([^\s]+)\s*$", text, re.M)
-    if not m or m.group(1) != "1.9.1": errors.append("SKILL.md: expected version 1.9.1")
-    for term in ["FULL FINANCIAL DEBUG","M01","M20","ERROR NOT FOUND","NOT ASSESSABLE","Primary Module","Related Modules","Audit Integrity Check","DECISION-CHANGING","UNREPRODUCIBLE","USER INPUT / UNVERIFIED"]:
+    if not m or m.group(1) != "1.9.2": errors.append("SKILL.md: expected version 1.9.2")
+    for term in ["FULL FINANCIAL DEBUG","M01","M20","ERROR NOT FOUND","NOT ASSESSABLE","NOT APPLICABLE","COMPLETED","Primary Module","Related Modules","Audit Integrity Check","DECISION-CHANGING","UNREPRODUCIBLE","USER INPUT / UNVERIFIED","VERIFIED SOURCE / DATE","PARTIALLY VERIFIED","Assessment confidence"]:
         if term.lower() not in text.lower(): errors.append(f"SKILL.md: missing hardening term: {term}")
 
 readme = ROOT / "README.md"
@@ -41,13 +41,13 @@ if tests.is_file():
 contract = ROOT / "references/full-audit-contract.md"
 if contract.is_file():
     c = contract.read_text(encoding="utf-8")
-    for term in ["ERROR NOT FOUND","NOT ASSESSABLE","Primary Module","Related Modules","Reconciliation requirements","DECISION-CHANGING"]:
+    for term in ["ERROR NOT FOUND","NOT ASSESSABLE","NOT APPLICABLE","COMPLETED","Primary Module","Related Modules","Reconciliation requirements","DECISION-CHANGING"]:
         if term not in c: errors.append(f"full-audit-contract.md: missing {term}")
 
 if errors:
     print("FAIL")
     for e in errors: print("-", e)
     sys.exit(1)
-print("PASS — Financial Debugger v1.9.1 repository integrity checks passed.")
+print("PASS — Financial Debugger v1.9.2 repository integrity checks passed.")
 print("files", sum(1 for p in ROOT.rglob('*') if p.is_file()))
 print("test_cases", len(re.findall(r"^##\s+\d+\s+", tests.read_text(encoding="utf-8"), re.M)))
