@@ -1,7 +1,7 @@
 ---
 name: financial-debugger
 description: Debug financial reasoning before money pays for the mistake. Audit claims, evidence, assumptions, methods, calculations, valuation, forecasts, scenarios, portfolio exposure, risk, uncertainty, and post-mortems. Use for equities, crypto, macro, financial news, valuation, portfolios, and personal-finance decisions. Prefer conditional analysis over prediction; never fabricate current data, sources, calculations, or confidence.
-version: 1.9.0
+version: 1.9.1
 ---
 
 # Financial Debugger
@@ -43,13 +43,51 @@ The system may forecast conditional outcomes, but it must never present a foreca
 21. Every material diagnostic finding must be normalized into the mandatory Finding Report schema defined below. Do not replace material findings with free-form audit sections.
 22. Severity is a categorical priority label, not a score. Finding counts may be shown, but do not aggregate them into an overall numeric health/quality score.
 23. A broad audit request on an attached or supplied financial artifact must trigger `FULL FINANCIAL DEBUG` unless the user explicitly requests a narrower module-only audit.
-24. In `FULL FINANCIAL DEBUG`, execute every canonical module M01–M20 and display an execution block for every module, even when the status is `ERROR NOT FOUND` or `NOT ASSESSABLE`.
-25. `ERROR NOT FOUND` means the module executed and no material defect was found in the available evidence. It does not mean the thesis is globally error-free.
-26. `NOT ASSESSABLE` means the module executed but required inputs are genuinely absent or outside the supplied evidence. Do not relabel missing evidence as an error.
+24. In `FULL FINANCIAL DEBUG`, execute every canonical module M01–M20 and display an execution block for every module.
+25. `ERROR NOT FOUND` means the module materially evaluated its scope and found no material defect in the available evidence. It does not mean the thesis is globally error-free.
+26. `NOT ASSESSABLE` means a required core input is absent, so the module cannot determine its diagnostic state. Missing evidence is not negative evidence.
 27. Never stop the full-audit module sweep because an earlier module found a critical issue. Record the blocker and continue every remaining module; only the final action/stop gate may state what cannot be concluded.
-28. Every material finding must have exactly one canonical `Primary Module` and may list zero or more `Related Modules`. Cross-module references must not duplicate the finding in the global count.
-29. Before finalizing, reconcile module statuses, finding IDs, severity counts, and the material-finding list. If counts disagree, fix the report instead of exposing inconsistent totals.
-30. The full-audit output must not collapse all checks into free-form prose. Use the canonical module execution matrix and material-finding schema from `references/full-audit-contract.md`.
+28. Every material finding must have exactly one canonical `Primary Module` and may list zero or more `Related Modules`; related references never create another global count.
+29. Before finalizing, reconcile module statuses, finding IDs, severity/materiality counts, evidence provenance, and the material-finding list. If counts disagree, repair the report before returning it.
+30. The full-audit output must not collapse all checks into free-form prose. Use the canonical module execution matrix, finding schema, and audit-integrity contract.
+
+## Production hardening — v1.9.1 final execution contract
+
+### A. Exact module state decision
+
+```text
+Can the module materially answer its core diagnostic question?
+├─ NO → NOT ASSESSABLE + Coverage: LIMITED + missing core input
+└─ YES
+   ├─ Material defect/diagnostic issue found → FOUND
+   └─ No material defect found → ERROR NOT FOUND
+```
+
+`PARTIAL` coverage may coexist with `FOUND` or `ERROR NOT FOUND` when the core diagnostic runs but some sub-checks are blocked.
+
+### B. Severity/materiality calibration
+
+- `DECISION-CHANGING` requires an explicit supported link to the stated decision, not merely a severe-sounding issue.
+- `HIGH` requires material impact plus strong evidence or a well-supported unresolved issue.
+- Low-confidence findings must not be escalated solely because hypothetical impact is large.
+- Always distinguish decision materiality from certainty about the future outcome.
+
+### C. Finding deduplication
+
+Use one `FD-NNN` per underlying material issue. Cross-module detections become `Related Modules`. Do not merge separate roots merely because their remedy is superficially similar.
+
+### D. Evidence provenance
+
+For material claims, tag evidence as `USER INPUT / UNVERIFIED`, `VERIFIED SOURCE / DATE`, `DERIVED CALCULATION`, `ASSUMPTION`, or `MISSING`. Never silently upgrade user-provided numbers to verified current data.
+
+### E. Calculation trace
+
+Material numerical findings must preserve inputs, formula, units, period, result, and rounding. Missing essential inputs produce `UNREPRODUCIBLE`/`NOT ASSESSABLE`, not an invented result.
+
+### F. Final audit integrity gate
+
+The last section of every full audit must reconcile all module blocks, unique finding IDs, primary-module ownership, severity/materiality counts, evidence provenance, and decision-changing links. Use `references/audit-integrity.md`.
+
 
 ## Scope
 

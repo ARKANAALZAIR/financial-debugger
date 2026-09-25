@@ -32,13 +32,13 @@ This contract defines deterministic behavior for broad financial audit prompts. 
 ## Status semantics
 
 ### FOUND
-The module executed and identified at least one material defect, gap, or unresolved diagnostic issue supported by available evidence.
+The module materially evaluated its scope and identified at least one material defect, gap, or unresolved diagnostic issue supported by available evidence.
 
 ### ERROR NOT FOUND
-The module executed against the available evidence and found no material error or diagnostic defect within its scope. This does not mean the overall thesis is proven or error-free.
+The module materially evaluated its scope and found no material error or diagnostic defect within the evidence available. This does not mean the overall thesis is proven or error-free.
 
 ### NOT ASSESSABLE
-The module executed, but required inputs are absent or outside the supplied evidence. Do not convert absence of evidence into a negative finding.
+A required core input is absent or outside the supplied evidence, so the module cannot reliably determine its diagnostic state. Do not convert missing evidence into a negative finding.
 
 ## Finding identity
 
@@ -66,3 +66,12 @@ These should trigger the full sweep when financial material is supplied:
 - `Debug this macro thesis.`
 
 Explicit narrow prompts may route only to the relevant module(s).
+
+
+## Final hardening additions
+
+- Use `PARTIAL` when a module can still answer its core question but some sub-checks are blocked; reserve `NOT ASSESSABLE` for missing core inputs.
+- For `DECISION-CHANGING` findings, state the explicit decision linkage and the condition that would change the decision state.
+- Every material calculation must be reproducible or explicitly marked `UNREPRODUCIBLE`.
+- Material evidence must be distinguishable as user input/unverified, verified source/date, derived calculation, assumption, or missing.
+- Final `Audit Integrity Check` must include module counts, unique findings, severity/materiality reconciliation, primary-module reconciliation, evidence-provenance check, and decision-changing-link check.

@@ -54,3 +54,14 @@ Do not publish a release when a critical gate fails. Document known limitations 
 - Unsupported base cases/probabilities remain UNKNOWN or CONDITIONAL.
 - Finding counts are not converted to arbitrary overall scores.
 - Portfolio-sizing conclusions remain conditional when risk-context inputs are missing.
+
+
+## v1.9.1 Final Hardening Gates
+
+- `NOT ASSESSABLE` is used when a core diagnostic input is absent; `ERROR NOT FOUND` requires a materially assessable module.
+- DECISION-CHANGING findings include an explicit decision linkage and supported condition for change.
+- Material calculations preserve inputs, formula, units, period, result, and rounding or are marked UNREPRODUCIBLE.
+- Evidence provenance is explicit for material claims.
+- Cross-module duplicate root causes are represented by one finding ID and one Primary Module.
+- Final Audit Integrity Check reconciles module counts, finding IDs, ownership, severity/materiality, and evidence provenance.
+- `scripts/validate.py` passes.

@@ -72,3 +72,27 @@ Unique Material Findings: N
 Severity Count Reconciled: PASS
 Finding ID Reconciliation: PASS
 Primary-Module Reconciliation: PASS
+
+
+## AUDIT INTEGRITY CHECK — REQUIRED
+
+```text
+Modules Executed: 20/20
+Modules With Findings: [N]
+Modules Error Not Found: [N]
+Modules Not Assessable: [N]
+Unique Material Findings: [N]
+Severity/Materiality Count Reconciled: PASS
+Finding ID Reconciliation: PASS
+Primary-Module Reconciliation: PASS
+Evidence Provenance Check: PASS
+Decision-Changing Link Check: PASS | N/A
+Calculation Reproducibility Check: PASS | N/A
+```
+
+### State rule
+
+`ERROR NOT FOUND` = core diagnostic assessable + no material defect.  
+`NOT ASSESSABLE` = required core evidence absent.  
+`FOUND` = material defect/diagnostic issue found.  
+`PARTIAL` coverage can be paired with FOUND or ERROR NOT FOUND when some sub-checks are blocked.

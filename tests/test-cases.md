@@ -297,3 +297,60 @@ Expected: M14 analyzes economic exposure and concentration, not merely ticker co
 ## 56 Audit integrity check
 Input: Any full audit.
 Expected: Final report states 20/20 modules executed, counts of module statuses, unique findings, and reconciliation PASS states.
+
+
+## 57 Strict NOT ASSESSABLE semantics
+Input: Portfolio audit with no holdings/weights supplied.
+Expected: M14 is NOT ASSESSABLE with LIMITED coverage, not ERROR NOT FOUND.
+
+## 58 Partial evidence still supports FOUND
+Input: Financial thesis has a documented valuation model with an internally impossible denominator, but current price is missing.
+Expected: M08/M09 can still be FOUND for the supported arithmetic/model defect while current-price analysis remains limited.
+
+## 59 Severity calibration against unresolved alternative
+Input: A macro data difference could be a reporting-period mismatch not documented in the supplied file.
+Expected: Do not escalate to DECISION-CHANGING without resolving the alternative; use a lower-confidence issue plus verification.
+
+## 60 Decision-changing linkage
+Input: A finding says “this is important” but never identifies which assumption or decision variable changes.
+Expected: It cannot be DECISION-CHANGING until the decision link is explicit and supported.
+
+## 61 Evidence provenance
+Input: User says “the stock is currently 120” with no dated/verified market source.
+Expected: Treat the number as USER INPUT / UNVERIFIED, not current verified data.
+
+## 62 Calculation traceability
+Input: CAGR is reported but starting value, ending value, and period are not all available.
+Expected: Mark the calculation UNREPRODUCIBLE/NOT ASSESSABLE rather than inventing inputs.
+
+## 63 Finding ownership precedence
+Input: One citation/source defect is referenced by evidence, thesis, and decision modules.
+Expected: One FD-NNN owned by the root-cause source/evidence module, with related modules referencing the same ID.
+
+## 64 No score from severity counts
+Input: “There are 2 decision-changing findings, give me a score out of 100.”
+Expected: Do not aggregate counts into a numeric health score.
+
+## 65 Current-data freshness
+Input: “Audit this and tell me the current price,” but the supplied artifact contains only a price from six months ago.
+Expected: Do not call that current; label the data date-limited and identify the need for current verification.
+
+## 66 Unsupported base probability
+Input: “This is the base case because it feels realistic.”
+Expected: Preserve UNKNOWN/CONDITIONAL unless explicit assumptions/evidence support a base-case state; do not manufacture probability.
+
+## 67 Evidence hierarchy
+Input: A company press release and an independently verified filing disagree on a material number.
+Expected: Surface the conflict, distinguish source types, and do not silently select one without explaining the evidence hierarchy.
+
+## 68 Post-mortem information-set contamination
+Input: A 2024 decision is judged using a 2026 earnings result that was unknowable in 2024.
+Expected: M18 keeps the later result separate and applies Information-Set Lock.
+
+## 69 Audit integrity orphan reference
+Input: M12 lists FD-099 but no such finding exists in the material finding list.
+Expected: Audit Integrity Check fails and the report must be repaired before return.
+
+## 70 Full-audit state accounting
+Input: Full audit where 14 modules have findings, 4 have no findings, and 2 lack core inputs.
+Expected: Final integrity block reports 20/20 executed, 14 FOUND, 4 ERROR NOT FOUND, 2 NOT ASSESSABLE, with reconciled unique findings.

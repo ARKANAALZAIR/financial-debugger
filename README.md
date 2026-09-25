@@ -277,6 +277,10 @@ Released under the MIT License. See `LICENSE`.
 
 Financial Debugger is one component of a broader **Debugger Series**: tools built around the idea that many bad outcomes come from errors in the reasoning process before the final answer or decision.
 
+## Final hardening
+
+v1.9.1 hardens the full-audit contract in five areas: `NOT ASSESSABLE` vs `ERROR NOT FOUND`, primary-module deduplication, evidence provenance, materiality/severity calibration, and calculation reproducibility. Every full audit ends with an **Audit Integrity Check** that reconciles module execution, unique findings, ownership, and decision-changing links.
+
 ## Validation
 
 Run:

@@ -1,6 +1,16 @@
 # Changelog
 
-## v1.9.0
+## v1.9.1 — Final Hardening Pass
+
+- Tightened `ERROR NOT FOUND` vs `NOT ASSESSABLE` semantics and coverage handling.
+- Added explicit decision-changing evidence linkage and severity/materiality calibration.
+- Added evidence provenance categories so user inputs are not silently treated as verified current data.
+- Added reproducibility rules for material calculations.
+- Added root-cause ownership precedence and stronger deduplication rules.
+- Added final Audit Integrity Check coverage for module counts, finding IDs, ownership, evidence provenance, and decision-changing links.
+- Expanded behavioral tests for status semantics, severity calibration, current-data limits, calculation traceability, and audit integrity.
+
+v1.9.0
 
 - Added `FULL FINANCIAL DEBUG` as the canonical broad-audit mode.
 - Added short-prompt auto-trigger behavior for supplied financial artifacts.
