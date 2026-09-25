@@ -227,7 +227,7 @@ financial-debugger/
 
 ## Roadmap
 
-### v1.9.0
+### v2.0.0
 
 - Added `FULL FINANCIAL DEBUG` as the canonical broad-audit mode.
 - Added short-prompt auto-trigger behavior for supplied financial artifacts.
