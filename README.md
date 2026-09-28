@@ -283,9 +283,9 @@ Financial Debugger is one component of a broader **Debugger Series**: tools buil
 
 ## Final hardening
 
-v1.9.2 is the final contract-hardening release. It extends v1.9.1 with deterministic module-state semantics, source-verification provenance, recovery-history traceability, arithmetic-vs-forecast separation, and synthesis/action status handling.
+v2.1.2 is the current production-hardening release. The package now enforces deterministic module-state semantics, source-verification provenance, recovery-history traceability, arithmetic-vs-forecast separation, synthesis/action status handling, canonical finding ownership, and severity/materiality reconciliation. Every full audit ends with an **Audit Integrity Check** that reconciles module execution, unique findings, ownership, and decision-changing links.
 
-v1.9.1 hardened the full-audit contract in five areas: `NOT ASSESSABLE` vs `ERROR NOT FOUND`, primary-module deduplication, evidence provenance, materiality/severity calibration, and calculation reproducibility. Every full audit ends with an **Audit Integrity Check** that reconciles module execution, unique findings, ownership, and decision-changing links.
+Earlier v1.9.x hardening is preserved in `CHANGELOG.md` as historical release context.
 
 ## Validation
 
@@ -297,7 +297,3 @@ python scripts/validate.py
 
 before release. Static validation checks repository integrity and required test coverage; it does not prove that the model will make every financial judgment correctly.
 
-
-### v1.9.4
-
-- Output-contract, integrity, and severity/materiality reconciliation.

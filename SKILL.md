@@ -1,7 +1,7 @@
 ---
 name: financial-debugger
 description: Debug financial reasoning before money pays for the mistake. Audit claims, evidence, assumptions, methods, calculations, valuation, forecasts, scenarios, portfolio exposure, risk, uncertainty, and post-mortems. Use for equities, crypto, macro, financial news, valuation, portfolios, and personal-finance decisions. Prefer conditional analysis over prediction; never fabricate current data, sources, calculations, or confidence.
-version: 1.9.4
+version: 2.1.2
 ---
 
 # Financial Debugger
@@ -51,7 +51,7 @@ The system may forecast conditional outcomes, but it must never present a foreca
 29. Before finalizing, reconcile module statuses, finding IDs, severity/materiality counts, evidence provenance, and the material-finding list. If counts disagree, repair the report before returning it.
 30. The full-audit output must not collapse all checks into free-form prose. Use the canonical module execution matrix, finding schema, and audit-integrity contract.
 
-## Production hardening — v1.9.4 consolidated execution contract
+## Production hardening — v2.1.2 consolidated execution contract
 
 ### A. Exact module state decision
 
