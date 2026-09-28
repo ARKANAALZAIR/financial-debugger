@@ -38,7 +38,13 @@ The module materially evaluated its scope and identified at least one material d
 The module materially evaluated its scope and found no material error or diagnostic defect within the evidence available. This does not mean the overall thesis is proven or error-free.
 
 ### NOT ASSESSABLE
-A required core input is absent or outside the supplied evidence, so the module cannot reliably determine its diagnostic state. Do not convert missing evidence into a negative finding.
+A required core input is absent, so the module cannot reliably determine its diagnostic state. Do not convert missing evidence into a negative finding.
+
+### NOT APPLICABLE
+The module has no material function for the audit context. Use Coverage `N/A`.
+
+### COMPLETED
+A synthesis/action module successfully produced its output from the audited state.
 
 ## Finding identity
 
@@ -90,3 +96,9 @@ A correct compounding calculation does not validate the assumed return path. Rep
 
 ### Recovery-duration traceability
 Claims about historical recovery time, drawdown duration, or repeated recovery require explicit date/definition/source traceability. Otherwise mark them UNVERIFIED and do not use them as established historical evidence.
+
+
+## Runtime render-conformance rule
+The model must render the canonical output structure exactly as defined in the template. A missing section, renamed section, duplicate section, shorthand finding, illegal class/status pair, orphan finding ID, or unreconciled counter is an output-contract failure even if the underlying financial reasoning is sound.
+
+Human-readable reports that do not include a machine-readable representation must not claim machine/human parity; mark that check `NOT APPLICABLE` or `NOT VERIFIED` according to the report mode.

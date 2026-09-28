@@ -1,16 +1,13 @@
 # Changelog
 
-## v1.9.1 — Final Hardening Pass
+## 2.1.2 — Final production hardening
 
-- Tightened `ERROR NOT FOUND` vs `NOT ASSESSABLE` semantics and coverage handling.
-- Added explicit decision-changing evidence linkage and severity/materiality calibration.
-- Added evidence provenance categories so user inputs are not silently treated as verified current data.
-- Added reproducibility rules for material calculations.
-- Added root-cause ownership precedence and stronger deduplication rules.
-- Added final Audit Integrity Check coverage for module counts, finding IDs, ownership, evidence provenance, and decision-changing links.
-- Expanded behavioral tests for status semantics, severity calibration, current-data limits, calculation traceability, and audit integrity.
+- Made the finding schema mandatory for every finding, not only HIGH/DECISION-CHANGING findings.
+- Added exact module class/status rendering requirements and a single canonical integrity block.
+- Hardened runtime self-checks for section order, finding ownership, decision links, and severity/materiality reconciliation.
 
-v1.9.0
+## 2.1.1 — Repository baseline
+
 
 - Added `FULL FINANCIAL DEBUG` as the canonical broad-audit mode.
 - Added short-prompt auto-trigger behavior for supplied financial artifacts.

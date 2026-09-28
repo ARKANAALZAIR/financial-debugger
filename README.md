@@ -4,6 +4,10 @@
 
 Financial Debugger is a Claude Agent Skill that audits financial reasoning as a connected decision system rather than simply commenting on a stock, asset, or market narrative. It traces the chain from facts and evidence through assumptions, methods, calculations, scenarios, risk, uncertainty, and the final decision.
 
+### v2.1.2 — Production hardening release
+
+This release locks the canonical output contract, status semantics, reconciliation gates, and runtime render-conformance checks. Runtime validation in a fresh Claude session remains an external verification step; it is not claimed by the package metadata.
+
 ## What it detects
 
 - Unsupported financial claims
@@ -292,3 +296,8 @@ python scripts/validate.py
 ```
 
 before release. Static validation checks repository integrity and required test coverage; it does not prove that the model will make every financial judgment correctly.
+
+
+### v1.9.4
+
+- Output-contract, integrity, and severity/materiality reconciliation.

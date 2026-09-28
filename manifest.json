@@ -1,0 +1,8 @@
+{
+  "name": "financial-debugger",
+  "version": "2.1.2",
+  "entrypoint": "SKILL.md",
+  "runtime_validation_claim": false,
+  "distribution": "universal-standalone-agent-skill",
+  "validator": "python scripts/validate.py"
+}

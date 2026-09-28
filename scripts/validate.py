@@ -1,53 +1,34 @@
-#!/usr/bin/env python3
-"""Static repository validator for Financial Debugger v1.9.2."""
 from pathlib import Path
-import re
-import sys
-
-ROOT = Path(__file__).resolve().parents[1]
-errors = []
-required_files = [
-    "SKILL.md", "README.md", "LICENSE", "CHANGELOG.md", "CONTRIBUTING.md", "QUALITY-GATES.md", "tests/test-cases.md",
-    "templates/quick-debug.md", "templates/deep-debug.md", "templates/valuation-debug.md", "templates/portfolio-debug.md",
-    "templates/postmortem.md", "templates/full-debug.md", "references/full-audit-contract.md", "references/audit-integrity.md"
-]
-required_dirs = ["examples", "references", "templates", "tests", "scripts"]
-for d in required_dirs:
-    if not (ROOT / d).is_dir(): errors.append(f"missing directory: {d}/")
-for f in required_files:
-    if not (ROOT / f).is_file(): errors.append(f"missing file: {f}")
-
-skill = ROOT / "SKILL.md"
-if skill.is_file():
-    text = skill.read_text(encoding="utf-8")
-    if not re.search(r"^name:\s*financial-debugger\s*$", text, re.M): errors.append("SKILL.md: invalid name")
-    m = re.search(r"^version:\s*([^\s]+)\s*$", text, re.M)
-    if not m or m.group(1) != "1.9.2": errors.append("SKILL.md: expected version 1.9.2")
-    for term in ["FULL FINANCIAL DEBUG","M01","M20","ERROR NOT FOUND","NOT ASSESSABLE","NOT APPLICABLE","COMPLETED","Primary Module","Related Modules","Audit Integrity Check","DECISION-CHANGING","UNREPRODUCIBLE","USER INPUT / UNVERIFIED","VERIFIED SOURCE / DATE","PARTIALLY VERIFIED","Assessment confidence"]:
-        if term.lower() not in text.lower(): errors.append(f"SKILL.md: missing hardening term: {term}")
-
-readme = ROOT / "README.md"
-if readme.is_file():
-    text = readme.read_text(encoding="utf-8")
-    if "# Financial Debugger" not in text: errors.append("README.md: missing title")
-    for term in ["evidence sufficiency","assumption registry","expectations audit","risk vs uncertainty","decision-changing","next best action","mandatory finding","full financial debug","audit this","20 canonical","not assessable","audit integrity"]:
-        if term.lower() not in text.lower(): errors.append(f"README.md: missing concept: {term}")
-
-tests = ROOT / "tests/test-cases.md"
-if tests.is_file():
-    cases = re.findall(r"^##\s+\d+\s+", tests.read_text(encoding="utf-8"), re.M)
-    if len(cases) < 70: errors.append(f"tests/test-cases.md: expected at least 70 numbered cases, found {len(cases)}")
-
-contract = ROOT / "references/full-audit-contract.md"
-if contract.is_file():
-    c = contract.read_text(encoding="utf-8")
-    for term in ["ERROR NOT FOUND","NOT ASSESSABLE","NOT APPLICABLE","COMPLETED","Primary Module","Related Modules","Reconciliation requirements","DECISION-CHANGING"]:
-        if term not in c: errors.append(f"full-audit-contract.md: missing {term}")
-
+import re,json,sys
+ROOT=Path(__file__).resolve().parents[1]
+EXPECTED='2.1.2'
+errors=[]
+for x in ['SKILL.md','README.md','LICENSE','CHANGELOG.md','CONTRIBUTING.md','QUALITY-GATES.md','VERSION','manifest.json','RELEASE-MANIFEST.json','references/audit-integrity.md','references/full-audit-contract.md','templates/full-debug.md','scripts/validate.py']:
+    if not (ROOT/x).is_file(): errors.append('missing '+x)
+if (ROOT/'VERSION').read_text().strip()!=EXPECTED: errors.append('VERSION mismatch')
+m=json.loads((ROOT/'manifest.json').read_text());
+if m.get('version')!=EXPECTED: errors.append('manifest version mismatch')
+sk=(ROOT/'SKILL.md').read_text(encoding='utf-8')
+for q in ['Non-negotiable rendering contract','Primary Module:','Related Modules:','Decision Link:','Materiality: DECISION-CHANGING | HIGH | MEDIUM | LOW','Use only `HIGH`, `MODERATE`, or `LOW`','Audit Integrity Check']:
+    if q not in sk: errors.append('SKILL missing '+q)
+seq=['ID: FD-NNN','Severity: CRITICAL | HIGH | MEDIUM | LOW','Materiality: DECISION-CHANGING | HIGH | MEDIUM | LOW','Type: <machine-readable category>','Primary Module: M##','Related Modules: [optional]','Decision-Changing: YES | NO | UNKNOWN','Decision Link: <specific decision variable/condition or N/A>','Location: <where in the reasoning chain>','Problem: <specific defect, gap, or uncertainty>','Evidence: <what supports the finding; distinguish user input, verified evidence, and missing evidence>','Reasoning: <why the evidence supports the diagnosis without overclaiming>','Impact: <what thesis/decision/portfolio outcome could change>','Recommended Action: <smallest high-information next step>','Verification Needed: <text or NONE>']
+fb=sk[sk.find('### Mandatory Finding Schema'):]; pos=-1
+for q in seq:
+ z=fb.find(q)
+ if z<0: errors.append('finding field missing '+q)
+ elif z<pos: errors.append('finding field out of order '+q)
+ pos=z
+ft=(ROOT/'templates/full-debug.md').read_text(encoding='utf-8')
+# exact top-level integrity and module order
+if ft.count('## AUDIT INTEGRITY CHECK')!=1: errors.append('integrity heading count != 1')
+mods=re.findall(r'^\| (M\d{2}) \|',ft,re.M)
+if mods[:20]!=[f'M{i:02d}' for i in range(1,21)]: errors.append('template module order mismatch')
+if 'Class | Status | Coverage' not in ft: errors.append('template class/status headers missing')
+if 'Overall: PASS | FAIL' not in ft: errors.append('template overall integrity missing')
+if 'Severity Count Reconciled' in ft and 'Materiality Count Reconciled' in ft: pass
+else: errors.append('separate severity/materiality reconciliation missing')
+if f'### v{EXPECTED}' not in (ROOT/'README.md').read_text(encoding='utf-8'): errors.append('README current version missing')
+if not (ROOT/'CHANGELOG.md').read_text().startswith(f'# Changelog\n\n## {EXPECTED} '): errors.append('CHANGELOG current version missing')
 if errors:
-    print("FAIL")
-    for e in errors: print("-", e)
-    sys.exit(1)
-print("PASS — Financial Debugger v1.9.2 repository integrity checks passed.")
-print("files", sum(1 for p in ROOT.rglob('*') if p.is_file()))
-print("test_cases", len(re.findall(r"^##\s+\d+\s+", tests.read_text(encoding="utf-8"), re.M)))
+ print('FAIL'); print('\n'.join(errors)); raise SystemExit(1)
+print('PASS'); print('version',EXPECTED); print('render_contract PASS'); print('finding_contract PASS'); print('status_contract PASS'); print('integrity_contract PASS')

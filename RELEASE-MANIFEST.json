@@ -1,0 +1,8 @@
+{
+  "name": "financial-debugger",
+  "version": "2.1.2",
+  "distribution": "universal-standalone-agent-skill",
+  "entrypoint": "SKILL.md",
+  "runtime_validation_claim": false,
+  "skill_sha256": "4e92a2c95400a5b05dcd6a9e7e557de906cf00864a1715c7d27f9d5b79857598"
+}

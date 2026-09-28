@@ -1,7 +1,7 @@
 ---
 name: financial-debugger
 description: Debug financial reasoning before money pays for the mistake. Audit claims, evidence, assumptions, methods, calculations, valuation, forecasts, scenarios, portfolio exposure, risk, uncertainty, and post-mortems. Use for equities, crypto, macro, financial news, valuation, portfolios, and personal-finance decisions. Prefer conditional analysis over prediction; never fabricate current data, sources, calculations, or confidence.
-version: 1.9.2
+version: 1.9.4
 ---
 
 # Financial Debugger
@@ -42,7 +42,7 @@ The system may forecast conditional outcomes, but it must never present a foreca
 20. Do not label a position size as objectively too large, the “biggest risk,” or otherwise unsuitable without the portfolio, constraints, and stress inputs needed to support that conclusion. Describe it as a high-impact assumption requiring testing when context is incomplete.
 21. Every material diagnostic finding must be normalized into the mandatory Finding Report schema defined below. Do not replace material findings with free-form audit sections.
 22. Severity is a categorical priority label, not a score. Finding counts may be shown, but do not aggregate them into an overall numeric health/quality score.
-23. A broad audit request on an attached or supplied financial artifact must trigger `FULL FINANCIAL DEBUG` unless the user explicitly requests a narrower module-only audit.
+23. A broad audit request on an attached or supplied financial artifact must trigger `FULL FINANCIAL DEBUG` unless the user explicitly requests a narrower module-only audit. If the supplied artifact/request is clearly outside financial scope, stop at a `DOMAIN GATE` state and do not manufacture M01–M20 findings.
 24. In `FULL FINANCIAL DEBUG`, execute every canonical module M01–M20 and display an execution block for every module.
 25. `ERROR NOT FOUND` means the module materially evaluated its scope and found no material defect in the available evidence. It does not mean the thesis is globally error-free.
 26. `NOT ASSESSABLE` means a required core input is absent, so the module cannot determine its diagnostic state. Missing evidence is not negative evidence.
@@ -51,7 +51,7 @@ The system may forecast conditional outcomes, but it must never present a foreca
 29. Before finalizing, reconcile module statuses, finding IDs, severity/materiality counts, evidence provenance, and the material-finding list. If counts disagree, repair the report before returning it.
 30. The full-audit output must not collapse all checks into free-form prose. Use the canonical module execution matrix, finding schema, and audit-integrity contract.
 
-## Production hardening — v1.9.1 final execution contract
+## Production hardening — v1.9.4 consolidated execution contract
 
 ### A. Exact module state decision
 
@@ -88,7 +88,7 @@ Can the module complete its synthesis/action function from the audited state?
 
 ### C. Finding deduplication
 
-Use one `FD-NNN` per underlying material issue. Cross-module detections become `Related Modules`. Do not merge separate roots merely because their remedy is superficially similar.
+Use one `FD-NNN` per underlying material issue. Cross-module detections become `Related Modules`. Every material finding must expose `Primary Module`, `Related Modules`, `Decision-Changing`, and `Decision Link`. Do not merge separate roots merely because their remedy is superficially similar.
 
 ### D. Evidence provenance
 
@@ -116,7 +116,7 @@ For historical recovery-duration, drawdown-recovery, or “always recovers” cl
 
 ### F. Assessment confidence
 
-`Confidence` is an assessment-quality label, not a probability of the financial outcome. Use only `HIGH`, `MODERATE`, or `LOW`, and state the basis.
+`Confidence` is an assessment-quality label, not a probability of the financial outcome. Use only `HIGH`, `MODERATE`, or `LOW`, and state the basis. Never emit `UNKNOWN` as a confidence value; when evidence is too weak, use `LOW` and state the limiting evidence.
 
 - `HIGH`: core inputs are present, material claims are well-provenanced, calculations are reproducible, and unresolved unknowns are unlikely to change the diagnosis.
 - `MODERATE`: the core diagnosis is usable, but some material evidence, inputs, or verification remain incomplete.
@@ -253,7 +253,7 @@ Extract:
 - Trigger/catalyst
 - Thesis, claims, and assumptions
 
-Do not invent missing context. If missing information blocks valid analysis, trigger the Sufficiency Gate.
+Do not invent missing context. If missing information blocks valid analysis, trigger the Sufficiency Gate. In `FULL FINANCIAL DEBUG`, this gate controls module coverage and evidence boundaries; it does not terminate the M01–M20 sweep. Only a genuinely empty/invalid artifact may prevent substantive execution, and even then every module must receive a status block explaining the limitation.
 
 ### 2. Sufficiency Gate
 Before deep analysis, classify inputs as:
@@ -264,7 +264,7 @@ Before deep analysis, classify inputs as:
 
 Critical missing inputs may include ticker/company identity, valuation date, relevant period, units/currency, or the actual decision being tested.
 
-When blocked, explain exactly what is missing and ask only for the minimum information that materially changes the analysis.
+When blocked, explain exactly what is missing and ask only for the minimum information that materially changes the analysis. In a full audit, continue through M01–M20 using `NOT ASSESSABLE`/`NOT APPLICABLE` where appropriate; do not stop after M02.
 
 ### 3. Extract claims
 Break compound statements into atomic claims.
@@ -527,26 +527,37 @@ For important findings, explicitly answer:
 
 Rank all material findings by decision impact. The Top 3 decision-changing findings should be surfaced first when present, but they are not substitutes for the rest of the material findings.
 
-### 18A. Full Financial Debug Output Contract
+## 18. Canonical Full Financial Debug Output Contract
+### Non-negotiable rendering contract
 
-For a `FULL FINANCIAL DEBUG`, use this top-level order:
+For FULL FINANCIAL DEBUG, use the exact 17 top-level items in §18. Do not rename, merge, omit, reorder, or duplicate sections. The integrity block appears exactly once and is the final numbered section.
+
+Every finding, regardless of severity, uses the canonical field order from `### Mandatory Finding Schema`. Never collapse a finding into shorthand prose. Missing/unknown fields must be explicitly represented rather than omitted.
+
+Every module block must include exactly: `MODULE ID`, `MODULE`, `Execution`, `Class`, `Status`, `Coverage`, `Finding IDs`, `Evidence`, `Notes`.
+
+Before returning the report, silently verify: M01–M20 are present once in order; diagnostic/synthesis statuses match module class; every referenced finding ID exists; severity and materiality totals reconcile independently; every DECISION-CHANGING finding has a Decision Link; and the single integrity block is internally consistent. If a check cannot be established, output `FAIL` or `NOT VERIFIED` rather than `PASS`.
+
+
+For a `FULL FINANCIAL DEBUG`, use exactly this top-level order:
 
 1. `# FINANCIAL DEBUG REPORT`
 2. `Audit Mode: FULL FINANCIAL DEBUG`
 3. Executive State
 4. Module Execution Matrix — M01 through M20, all shown
-5. Finding Distribution
-6. All Material Findings, ordered by severity and decision impact
-7. Evidence Map
-8. Assumption Registry
-9. Scenario / Sensitivity analysis when material
-10. Thesis State
-11. Decision State
-12. Confidence
-13. Next Best Action
-14. Kill Switches when useful
-15. Remaining Unknowns / Stop Gate
-16. Audit Integrity Check
+5. Severity Distribution
+6. Materiality Distribution
+7. All Material Findings, ordered by severity and decision impact
+8. Evidence Map
+9. Assumption Registry
+10. Scenario / Sensitivity analysis when material
+11. Thesis State
+12. Decision State
+13. Confidence
+14. Next Best Action
+15. Kill Switches when useful
+16. Remaining Unknowns / Stop Gate when needed
+17. Audit Integrity Check
 
 ### Canonical module status
 
@@ -556,18 +567,44 @@ Each module block must contain:
 MODULE ID: M01
 MODULE: <canonical name>
 Execution: COMPLETE
-Status: FOUND / ERROR NOT FOUND / NOT ASSESSABLE / NOT APPLICABLE / COMPLETED
-Coverage: FULL / PARTIAL / LIMITED
+Class: DIAGNOSTIC | SYNTHESIS
+Status: FOUND | ERROR NOT FOUND | NOT ASSESSABLE | NOT APPLICABLE | COMPLETED
+Coverage: FULL | PARTIAL | LIMITED | N/A
 Finding IDs: [FD-...]
 Evidence: <what was examined>
 Notes: <why the status applies>
 ```
 
-`Finding IDs` may be empty when the module has no material finding.
+Diagnostic modules M01–M15 and M18 use `FOUND` / `ERROR NOT FOUND` / `NOT ASSESSABLE` / `NOT APPLICABLE`. Synthesis/action modules M16, M17, M19, and M20 use `COMPLETED` / `NOT ASSESSABLE` / `NOT APPLICABLE`. `NOT APPLICABLE` uses coverage `N/A`; `NOT ASSESSABLE` uses `LIMITED`.
+
+### Mandatory Finding Schema
+
+Every finding MUST use this exact field sequence. `HIGH` and `DECISION-CHANGING` findings receive additional scrutiny, but never a different schema:
+
+```text
+## [severity] FD-NNN
+ID: FD-NNN
+Severity: CRITICAL | HIGH | MEDIUM | LOW
+Materiality: DECISION-CHANGING | HIGH | MEDIUM | LOW
+Type: <machine-readable category>
+Primary Module: M##
+Related Modules: [optional] 
+Decision-Changing: YES | NO | UNKNOWN
+Decision Link: <specific decision variable/condition or N/A>
+Location: <where in the reasoning chain>
+Problem: <specific defect, gap, or uncertainty>
+Evidence: <what supports the finding; distinguish user input, verified evidence, and missing evidence>
+Reasoning: <why the evidence supports the diagnosis without overclaiming>
+Impact: <what thesis/decision/portfolio outcome could change>
+Recommended Action: <smallest high-information next step>
+Verification Needed: <text or NONE>
+```
+
+`Severity` and `Materiality` are separate axes. Severity describes seriousness of the diagnostic defect; materiality describes potential effect on the stated decision. Do not use `DECISION-CHANGING` as a severity label.
 
 ### Audit Integrity Check
 
-The full-audit report must end with:
+The full-audit report must end with exactly one integrity block:
 
 ```text
 Modules Executed: 20/20
@@ -577,75 +614,17 @@ Modules Not Assessable: N
 Modules Not Applicable: N
 Synthesis/Action Modules Completed: N
 Unique Material Findings: N
-Severity Count Reconciled: PASS
-Finding ID Reconciliation: PASS
-Primary-Module Reconciliation: PASS
-Evidence Provenance Reconciliation: PASS
-Decision-Link Reconciliation: PASS
+Severity Count Reconciled: PASS | FAIL
+Materiality Count Reconciled: PASS | FAIL
+Finding ID Reconciliation: PASS | FAIL
+Primary-Module Reconciliation: PASS | FAIL
+Evidence Provenance Reconciliation: PASS | FAIL
+Decision-Link Reconciliation: PASS | FAIL
 ```
 
 Never claim `20/20` unless every module block is actually present.
 
-### 18. Mandatory Finding Report and Output Contract
-The final response MUST use the following top-level order unless the Sufficiency Gate blocks analysis: 
-
-1. `# FINANCIAL DEBUG REPORT`
-2. Executive State
-3. Finding Distribution
-4. All Material Findings, ordered by severity and decision impact
-5. Evidence Map
-6. Assumption Registry
-7. Scenario / Sensitivity analysis when material
-8. Thesis State
-9. Decision State
-10. Confidence
-11. Next Best Action
-12. Kill Switches when useful
-13. Remaining Unknowns / Stop Gate when needed
-
-The report header must contain, when applicable:
-```text
-Thesis State: SUPPORTED / FRAGILE / CONTESTED / INSUFFICIENT EVIDENCE / INVALID / NOT MATERIAL
-Decision State: SUPPORTED / FRAGILE / CONTESTED / INSUFFICIENT EVIDENCE / INVALID / NOT MATERIAL
-Confidence: HIGH / MODERATE / LOW / UNKNOWN
-```
-
-The Finding Distribution is a count only:
-```text
-🔴 Decision-changing: N
-🟠 High: N
-🟡 Medium: N
-🔵 Low: N
-```
-Never turn these counts into an overall score.
-
-#### Mandatory Finding Schema
-Every `HIGH` and `DECISION-CHANGING` finding MUST use this exact field sequence:
-
-```text
-## [severity] #NNN
-ID: FD-NNN
-Severity: DECISION-CHANGING / HIGH / MEDIUM / LOW
-Type: <machine-readable category>
-Location: <where in the reasoning chain>
-Problem: <specific defect, gap, or uncertainty>
-Evidence: <what supports the finding; distinguish user input, verified evidence, and missing evidence>
-Reasoning: <why the evidence supports the diagnosis without overclaiming>
-Impact: <what thesis/decision/portfolio outcome could change>
-Recommended Action: <smallest high-information next step>
-```
-
-`MEDIUM` and `LOW` findings may be compacted only when numerous, but their same semantic fields must remain recoverable. Do not replace the finding list with free-form sections such as “Methodology Issues” or “Evidence Audit” when those sections contain material findings. Those topics belong inside findings and may then be summarized in the later Evidence Map or registries.
-
-#### Finding Integrity Rules
-- A finding is a diagnosis, not a new unverified fact.
-- `Evidence` must not silently upgrade a source or user statement into a stronger claim.
-- `Reasoning` must not infer likelihood from missing evidence alone.
-- `Impact` must describe decision consequences, not assert the outcome will occur.
-- `Recommended Action` must test or reduce uncertainty; it must not become an automatic BUY/SELL order.
-- If a finding depends on an unverified input, say so explicitly.
-- If the available evidence cannot distinguish competing explanations, use `CONTESTED` or `UNKNOWN` rather than choosing one.
-- Do not call multiple signals “one evidence” merely because they support the same thesis. When dependence is not established, label the issue as `POSSIBLE_EVIDENCE_DEPENDENCE` or equivalent and state what would establish independence.
+The current executive confidence vocabulary is only `HIGH / MODERATE / LOW`. If the assessment cannot be made precisely, use `LOW` and state the limiting evidence rather than inventing or introducing an `UNKNOWN` confidence category.
 
 ### 19. Decision Kill Switches
 When useful, specify conditions that should trigger reassessment.
