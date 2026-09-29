@@ -1,9 +1,8 @@
+## Reference-loading prerequisite
+
+Before emitting a full-audit status matrix, severity reconciliation, or decision-changing conclusion, the runtime must load this file and `references/full-audit-contract.md`. Do not approximate canonical reconciliation rules from memory.
+
 # Financial Audit Integrity & Reconciliation Rules
-
-## Cross-Debugger Vocabulary Mapping
-
-For cross-debugger aggregation, map `FOUND` ≡ `ERROR FOUND`, `ERROR NOT FOUND` ≡ `Error Not Found`, `NOT ASSESSABLE` ≡ `NOT ASSESSABLE`, `NOT APPLICABLE` ≡ `NOT APPLICABLE`, and `COMPLETED` ≡ `COMPLETED`. Domain-gate outputs are not module statuses.
-
 
 ## 1. Module-state semantics
 
@@ -28,7 +27,7 @@ Typical mapping:
 | Diagnostic core inputs present + material issue found | FOUND | FULL/PARTIAL |
 | Diagnostic core inputs present + no material issue found | ERROR NOT FOUND | FULL/PARTIAL |
 | Diagnostic core input absent | NOT ASSESSABLE | LIMITED |
-| Module does not apply | NOT APPLICABLE | N/A |
+| Module does not apply | NOT APPLICABLE | LIMITED |
 | Synthesis/action function completed | COMPLETED | FULL/PARTIAL |
 
 Do not use `ERROR NOT FOUND` just because the module was called. Do not use `FOUND` for a synthesis state merely because the resulting state is FRAGILE/CONTESTED.
@@ -65,24 +64,12 @@ Use this as a default owner, not a reason to merge genuinely different problems.
 
 ## 3. Severity and materiality calibration
 
-Financial Debugger uses two separate axes: `Severity` and `Materiality`. Severity describes seriousness of the diagnostic defect; materiality describes potential effect on the stated decision. They must be recorded separately.
+Financial Debugger uses severity labels plus decision materiality. They are related but not identical.
 
-Severity:
-- `CRITICAL`
-- `HIGH`
-- `MEDIUM`
-- `LOW`
-
-Materiality:
-- `DECISION-CHANGING`
-- `HIGH`
-- `MEDIUM`
-- `LOW`
-
-`DECISION-CHANGING` requires evidence that the finding could change the stated decision under the supplied constraints or a supported sensitivity.
-`HIGH` materiality requires a material decision/reasoning consequence with strong evidence or a well-supported unresolved issue.
-`MEDIUM` materiality is consequential but bounded.
-`LOW` materiality is localized and unlikely to change the decision by itself.
+- `DECISION-CHANGING` requires evidence that the finding could change the stated decision under the supplied constraints or a supported sensitivity.
+- `HIGH` requires a material decision/reasoning consequence with strong evidence or a well-supported unresolved issue.
+- `MEDIUM` is consequential but bounded.
+- `LOW` is localized and unlikely to change the decision by itself.
 
 Do not call a finding decision-changing merely because it sounds important. Show the decision link: which assumption/claim changes, which decision variable changes, and what condition would flip the state.
 
@@ -126,8 +113,7 @@ Before returning the report:
 [ ] Every finding ID is unique and has exactly one Primary Module
 [ ] Related-module references point to existing finding IDs
 [ ] Global finding totals equal the unique finding list
-[ ] Severity totals reconcile
-[ ] Materiality totals reconcile
+[ ] Severity/materiality totals reconcile
 [ ] No blocker suppresses remaining modules
 [ ] Material calculations are reproducible or explicitly UNREPRODUCIBLE
 [ ] Evidence provenance is explicit for material claims
@@ -137,8 +123,3 @@ Before returning the report:
 [ ] No unsupported probability/base-case/ranking is introduced
 [ ] Final Audit Integrity Check matches the displayed module matrix
 ```
-
-
-## 6. Render-conformance gate
-
-The final report is invalid when any of the following occurs: duplicate top-level section, missing M01–M20, class/status mismatch, finding shorthand, missing Primary Module/Decision Link on a material finding, orphan ID, or severity/materiality counter drift. These are contract failures independent of analytical quality.

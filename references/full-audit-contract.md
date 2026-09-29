@@ -31,6 +31,9 @@ This contract defines deterministic behavior for broad financial audit prompts. 
 
 ## Status semantics
 
+### Reference-loading prerequisite
+Before a full audit starts, the runtime must load this contract and `references/audit-integrity.md`. Any fixed status, reconciliation, or output rule in those files is canonical. If a required contract cannot be loaded, do not silently approximate it.
+
 ### FOUND
 The module materially evaluated its scope and identified at least one material defect, gap, or unresolved diagnostic issue supported by available evidence.
 
@@ -38,13 +41,7 @@ The module materially evaluated its scope and identified at least one material d
 The module materially evaluated its scope and found no material error or diagnostic defect within the evidence available. This does not mean the overall thesis is proven or error-free.
 
 ### NOT ASSESSABLE
-A required core input is absent, so the module cannot reliably determine its diagnostic state. Do not convert missing evidence into a negative finding.
-
-### NOT APPLICABLE
-The module has no material function for the audit context. Use Coverage `N/A`.
-
-### COMPLETED
-A synthesis/action module successfully produced its output from the audited state.
+A required core input is absent or outside the supplied evidence, so the module cannot reliably determine its diagnostic state. Do not convert missing evidence into a negative finding.
 
 ## Finding identity
 
@@ -59,7 +56,7 @@ Before final response:
 - every finding severity appears exactly once in the global count;
 - global severity totals equal the actual unique finding list;
 - module finding IDs point to existing findings;
-- no module is missing because another module found a blocker.
+- no module is missing because another module found a blocker; blockers do not suppress the remaining sweep.
 
 ## Broad prompt examples
 
@@ -83,7 +80,7 @@ Explicit narrow prompts may route only to the relevant module(s).
 - Final `Audit Integrity Check` must include module counts, unique findings, severity/materiality reconciliation, primary-module reconciliation, evidence-provenance check, and decision-changing-link check.
 
 
-## Final-hardening additions (v1.9.2)
+## Final-hardening additions (v1.9.3)
 
 ### Source verification record
 For every material externally verified claim, retain: publisher/institution, source title or stable identifier, publication date, retrieval date when freshness matters, exact claim supported, relevant period, source quality/type, and known source lineage. If any of these are materially missing, do not label the claim fully VERIFIED.
@@ -96,9 +93,3 @@ A correct compounding calculation does not validate the assumed return path. Rep
 
 ### Recovery-duration traceability
 Claims about historical recovery time, drawdown duration, or repeated recovery require explicit date/definition/source traceability. Otherwise mark them UNVERIFIED and do not use them as established historical evidence.
-
-
-## Runtime render-conformance rule
-The model must render the canonical output structure exactly as defined in the template. A missing section, renamed section, duplicate section, shorthand finding, illegal class/status pair, orphan finding ID, or unreconciled counter is an output-contract failure even if the underlying financial reasoning is sound.
-
-Human-readable reports that do not include a machine-readable representation must not claim machine/human parity; mark that check `NOT APPLICABLE` or `NOT VERIFIED` according to the report mode.

@@ -1,13 +1,25 @@
 # Changelog
 
-## 2.1.2 — Final production hardening
+## v1.9.3 — Full-Audit Continuation & Reference Loading Hardening
 
-- Made the finding schema mandatory for every finding, not only HIGH/DECISION-CHANGING findings.
-- Added exact module class/status rendering requirements and a single canonical integrity block.
-- Hardened runtime self-checks for section order, finding ownership, decision links, and severity/materiality reconciliation.
+### Fixed
+- Removed the conflicting second top-level output contract; `18. Full Financial Debug Output Contract` is now canonical.
+- Converted the Sufficiency Gate into a module-level blocker for full audits instead of a report-level short-circuit.
+- Explicitly require M01–M20 continuation after module-level evidence blockers.
+- Added a reference-loading prerequisite for the full-audit and audit-integrity contracts.
+- Clarified role-specific status semantics for diagnostic vs synthesis/action modules.
 
-## 2.1.1 — Repository baseline
+v1.9.1 — Final Hardening Pass
 
+- Tightened `ERROR NOT FOUND` vs `NOT ASSESSABLE` semantics and coverage handling.
+- Added explicit decision-changing evidence linkage and severity/materiality calibration.
+- Added evidence provenance categories so user inputs are not silently treated as verified current data.
+- Added reproducibility rules for material calculations.
+- Added root-cause ownership precedence and stronger deduplication rules.
+- Added final Audit Integrity Check coverage for module counts, finding IDs, ownership, evidence provenance, and decision-changing links.
+- Expanded behavioral tests for status semantics, severity calibration, current-data limits, calculation traceability, and audit integrity.
+
+v1.9.0
 
 - Added `FULL FINANCIAL DEBUG` as the canonical broad-audit mode.
 - Added short-prompt auto-trigger behavior for supplied financial artifacts.

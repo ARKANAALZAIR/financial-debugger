@@ -383,3 +383,13 @@ Expected: compounding arithmetic is checked separately from whether a 5% monthly
 ## 77 Assessment confidence
 Input: strong calculations but several material market claims remain unverified.
 Expected: qualitative confidence can be `MODERATE` or `LOW` with explicit basis; never invent a numeric probability of correctness.
+
+
+## 71. Full-audit continuation regression
+Given a FULL FINANCIAL DEBUG request where M09 valuation inputs are missing, M01–M20 must still all appear. M09 becomes NOT ASSESSABLE, but the audit does not stop. Any report that truncates before M20 fails.
+
+## 72. Canonical output contract regression
+The full-audit report uses one top-level output contract only. A legacy/duplicate contract that omits the Module Execution Matrix is a specification failure.
+
+## 73. Reference-loading regression
+Before fixed reconciliation or scoring rules are applied, the runtime must load the cited full-audit and audit-integrity references.
